@@ -6,8 +6,9 @@ export default function DayList({ days, value, onChange }) {
   return (
     <ul>
       {days.map(({ id, name, spots }) => {
-        return <DayListItem key={id} name={name} spots={spots} setDay={() => onChange(name)} selected={name === value}></DayListItem>
+        return <DayListItem key={id} name={name} spots={spots} setDay={onChange} selected={name === value}></DayListItem>
       })}
     </ul>
   );
 }
+

@@ -4,6 +4,7 @@ import Button from "../Button";
 import { useState } from "react";
 
 export default function Form({ student, interviewer, interviewers, onSave, onCancel }) {
+  // console.log('props :', { student, interviewer, interviewers, onSave, onCancel });
   const [studentInfo, setStudentInfo] = useState(student || "");
   const [interviewerInfo, setInterviewerInfo] = useState(interviewer || null)
 
@@ -39,7 +40,7 @@ export default function Form({ student, interviewer, interviewers, onSave, onCan
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={cancel} >Cancel</Button>
-          <Button confirm onClick={onSave}>Save</Button>
+          <Button confirm onClick={() => onSave(studentInfo, interviewerInfo)}>Save</Button>
         </section>
       </section>
     </main>
