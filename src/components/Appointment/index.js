@@ -6,9 +6,21 @@ import Empty from "./Empty";
 import Status from './Status';
 import Confirm from './Confirm'
 import Form from "./Form";
+import Error from "./Error";
 import useVisualMode from "hooks/useVisualMode";
 
+const EMPTY = "EMPTY";
+const SHOW = "SHOW";
+const CREATE = "CREATE";
+const SAVING = "SAVING";
+const DELETE = "DELETE"
+const DELETING = "DELETING";
+const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
+
 export default function Appointment({ time, id, interview, interviewers, bookInterview, cancelInterview }) {
+
 
   const save = (name, interviewer) => {
     const interview = {
@@ -24,14 +36,14 @@ export default function Appointment({ time, id, interview, interviewers, bookInt
           }
         })
         .catch((err) => {
-          console.log(err);
+          transition(ERROR_SAVE, true)
         })
     }
   }
 
   const deleteApp = (name, interviewer) => {
     const interview = null
-    transition(DELETE)
+    transition(DELETING, true)
     cancelInterview(id, interview)
       .then((res) => {
         if (res === 204) {
@@ -39,15 +51,10 @@ export default function Appointment({ time, id, interview, interviewers, bookInt
         }
       })
       .catch((err) => {
-        console.log(err);
+        transition(ERROR_DELETE, true)
       })
   }
 
-  const EMPTY = "EMPTY";
-  const SHOW = "SHOW";
-  const CREATE = "CREATE";
-  const SAVING = "SAVING";
-  const DELETE = "DELETE"
 
   const { mode, transition, back } = useVisualMode(
     interview ? SHOW : EMPTY
@@ -60,25 +67,59 @@ export default function Appointment({ time, id, interview, interviewers, bookInt
 
         transition(CREATE);
       }} />}
+
+      {mode === SAVING && (
+        <Status message={SAVING} />
+      )}
+
+      {mode === DELETING && (
+        <Status message={DELETING} />
+      )}
+
       {mode === SHOW && (
         <Show
           student={interview.student}
           interviewer={interview.interviewer}
-          onDelete={deleteApp}
+          onDelete={() => transition(DELETE)}
+          onEdit={() => transition(EDIT)}
         />
       )}
+
+      {mode === EDIT && <Form
+        interviewers={interviewers}
+        student={interview.student}
+        interviewer={interview.interviewer.id}
+        onCancel={() => back()}
+        onSave={save}
+      />
+      }
+
       {mode === CREATE && <Form
         onSave={save}
         onCancel={back}
         interviewers={interviewers}
-        onDelete={deleteApp}
       />}
-      {mode === SAVING && (
-        <Status />
-      )}
+
+
       {mode === DELETE && (
-        <Confirm />
+        <Confirm
+          message={`Are you sure you'd like to delete?`}
+          onCancel={() => back()}
+          onConfirm={deleteApp}
+        />
       )}
+
+      {mode === ERROR_SAVE &&
+        <Error
+          message={"Error Saving"}
+          onClose={() => back()}
+        />}
+      {mode === ERROR_DELETE &&
+        <Error
+          message={"Error Deleting"}
+          onClose={() => back()}
+        />
+      }
     </article>
   )
 }
