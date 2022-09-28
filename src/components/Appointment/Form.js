@@ -4,7 +4,6 @@ import Button from "../Button";
 import { useState } from "react";
 
 export default function Form({ student, interviewer, interviewers, onSave, onCancel }) {
-  // console.log('props :', { student, interviewer, interviewers, onSave, onCancel });
   const [studentInfo, setStudentInfo] = useState(student || "");
   const [interviewerInfo, setInterviewerInfo] = useState(interviewer || null)
 
