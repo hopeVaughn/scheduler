@@ -42,9 +42,8 @@ export default function Appointment({ time, id, interview, interviewers, bookInt
   }
 
   const deleteApp = (name, interviewer) => {
-    const interview = null
     transition(DELETING, true)
-    cancelInterview(id, interview)
+    cancelInterview(id)
       .then((res) => {
         if (res === 204) {
           transition(EMPTY, true)
@@ -61,10 +60,9 @@ export default function Appointment({ time, id, interview, interviewers, bookInt
   );
 
   return (
-    <article className="appointment">
+    <article className="appointment" data-testid="appointment">
       <Header time={time} />
       {mode === EMPTY && <Empty onAdd={() => {
-
         transition(CREATE);
       }} />}
 
@@ -103,7 +101,7 @@ export default function Appointment({ time, id, interview, interviewers, bookInt
 
       {mode === DELETE && (
         <Confirm
-          message={`Are you sure you'd like to delete?`}
+          message={`Are you sure you would like to delete?`}
           onCancel={() => back()}
           onConfirm={deleteApp}
         />

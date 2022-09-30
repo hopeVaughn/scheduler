@@ -6,8 +6,7 @@ export default function useApllicationData() {
   const updateSpots = (spot) => {
     const selectedDay = state.days.find(day => day.name === state.day);
     const dayID = selectedDay.id;
-    const updateDays = [...state.days];
-    updateDays.forEach(day => day.id === dayID ? day.spots += spot : day);
+    const updateDays = [...state.days].map(day => day.id === dayID ? { ...day, spots: day.spots + spot } : { ...day });
     return updateDays;
   };
 
@@ -19,17 +18,16 @@ export default function useApllicationData() {
 
   const setDay = day => setState({ ...state, day });
 
-  const cancelInterview = (id, interview) => {
+  const cancelInterview = (id) => {
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
+      interview: null
     }
     const appointments = {
       ...state.appointments,
       [id]: appointment
     }
     const days = updateSpots(1)
-
     return axios.delete(`api/appointments/${appointment.id}`, appointment)
       .then((res) => {
         const status = res.status
@@ -42,7 +40,7 @@ export default function useApllicationData() {
       })
   }
 
-  const bookInterview = (id, interview, mode) => {
+  const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -52,11 +50,13 @@ export default function useApllicationData() {
       [id]: appointment
     };
 
-    const days = mode === "EDIT" ? updateSpots(0) : updateSpots(-1)
+    const oldInterview = state.appointments[id].interview;
+    const num = oldInterview ? 0 : -1;
+
+    const days = updateSpots(num)
     return axios.put(`api/appointments/${appointment.id}`, appointment)
       .then((res) => {
         const status = res.status
-        console.log(res);
         setState(prev => ({
           ...prev,
           appointments,
@@ -79,7 +79,7 @@ export default function useApllicationData() {
         setState(prev => ({ ...prev, days, appointments, interviewers }));
       })
       .catch((error) => {
-        console.log(error.response);
+        console.log(error.message);
       })
   }, [])
 

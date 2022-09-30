@@ -11,10 +11,10 @@ export default function DayListItem({ name, spots, setDay, selected }) {
   });
 
   const formatSpots = () => {
+
     if (spots === 0) {
       return <h3 className="text--light"> no spots remaining </h3>
     }
-
     if (spots === 1) {
       return <h3 className="text--light"> 1 spot remaining </h3>
     }
@@ -25,9 +25,9 @@ export default function DayListItem({ name, spots, setDay, selected }) {
   }
 
   return (
-    <li className={dayClass} onClick={() => setDay(name)}>
+    <li className={dayClass} onClick={() => setDay(name)} data-testid="day">
       <h2 className="text--regular">{name}</h2>
-      {formatSpots()}
+      {formatSpots(spots)}
     </li>
   );
 }
