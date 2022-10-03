@@ -1,8 +1,12 @@
-# SCHEDULER
+# INTERVIEW SCHEDULER
 
 ## Purpose
 
-Scheduler is a creative, single page scheduling app using React.
+Scheduler is a creative, single page scheduling app using React. Single component testing was done through the use of Storybook, unit testing is provided through Jest and E2E testing provided through Cypress.
+
+## Setup
+
+Install dependencies with `npm install`. Please see notes for required database API information.
 
 ## Final Product
 
